@@ -7,7 +7,7 @@ const blogController = require('../controllers/blogController')
 
 router.post("/createAuthor", )
 
-router.post('/createBlog', )
+router.post('/createBlog', blogController.createBlog)
 
 
 module.exports = router;
