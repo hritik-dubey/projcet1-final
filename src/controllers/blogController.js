@@ -1,18 +1,33 @@
-//<<<<<<< HEAD
-//let createBlog = async (req,res)=>{
-    
-//}
-//=======
-const blogSchema = require("../models/blogModel")
+const blogModel = require("../models/blogModel")
 
-let createBlog = async (req, res) => {
+const createBlog = async (req, res) => {
     try {
-            console.log(hjhkj)
-    } catch (err) {
-        res.status(500).send({ Error: err.message })
+        const data = req.body
+        if (!data.title||!data.body||!data.category)  return res.status(400).send({error:"title ,body ,category are mandantory"})
+            const result = await blogModel.create(data)
+            return res.status(201).send({ msg: result })
+    }
+    catch (error) {
+        res.status(500).send({ status: false, error: error.message })
     }
 }
 
+// const updateBlog= async (req,res)=>{
+//     try{
 
-module.exports = { createBlog, }
-//>>>>>>> c1b29db0f2b20819b40b81f6938a370f22162cf1
+//         const id =req.params.blogId
+//         const data =req.body
+//         const updated = await blogModel.findByIdAndUpdate(id ,  data , { new: true })
+//         res.send({msg:updated})
+//         console.log(updated)
+
+//     }
+//     catch (error) {
+//         res.status(500).send({ status: false, error: error.message })
+//     }
+}
+
+module.exports.createBlog = createBlog
+module.exports.updateBlog=updateBlog
+
+

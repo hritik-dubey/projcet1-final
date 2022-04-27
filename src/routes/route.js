@@ -9,5 +9,7 @@ router.post("/createAuthor", authorController.createAuthor )
 
 router.post('/createBlog', blogController.createBlog)
 
+router.put("/blogs/:blogId",blogController.updateBlog)
+
 
 module.exports = router;
