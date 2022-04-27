@@ -12,5 +12,9 @@ router.post("/postblog",blogcontrollers.postblog);
 
 
 
+router.put('/blogs:/blogId', blogController.createBlog)
 
-module.exports = router;
+router.delete('/blogs:/blogId', blogController.deleteBlog)
+
+
+module.exports = router; 
