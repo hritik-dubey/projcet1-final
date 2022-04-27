@@ -40,7 +40,7 @@ Repository for backend cohort - Uranium
   - List of blogs that have a specific subcategory
 example of a query url: blogs?filtername=filtervalue&f2=fv2
 
-### PUT /blogs/:blogId
+### PUT /blogs/:blogId   //$addToSet  
 - Updates a blog by changing the its title, body, adding tags, adding a subcategory. (Assuming tag and subcategory received in body is need to be added)
 - Updates a blog by changing its publish status i.e. adds publishedAt date and set published to true
 - Check if the blogId exists (must have isDeleted false). If it doesn't, return an HTTP status 404 with a response body like [this](#error-response-structure)
