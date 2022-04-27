@@ -23,8 +23,6 @@ let getblog = async (req, res) => {
             res.status(500).send({ status: false, error: error.message })
         }
 
-}          
-
 // //         let data = req.body
 // //         let result = await blogModel.create(data)
 // //         res.status(201).send({ msg: result })
