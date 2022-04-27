@@ -1,16 +1,23 @@
 {
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.0",
+    "mongoose": "^6.3.1"
+  }
+}
     "name": "src",
     "version": "1.0.0",
     "description": "Backend cohort project 1 / blogging site",
     "main": "index.js",
     "scripts": {
-//<<<<<<< project1/Blog/Phase1
+
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "npx nodemon src/index.js"
 //=======
       "test": "echo \"Error: no test specified\" && exit 1",
       "start":"npx nodemon src/index.js"
-//>>>>>>> main
+
     },
     "author": "",
     "license": "ISC",
