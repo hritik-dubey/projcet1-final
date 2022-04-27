@@ -5,6 +5,7 @@ const blogcontrollers = require("../controllers/blogController")
 
 
 
+//router.post('/createBlog', blogController.createBlog)
 router.get("/getblog",blogcontrollers.getblog);
 router.post("/postblog",blogcontrollers.postblog);
 
