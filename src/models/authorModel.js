@@ -16,20 +16,11 @@ const authormodel = new mongoose.Schema({
         enum: ["Mr", "Mrs", "Miss"],
     },
     email: {
-        type: String,    //"ghghjghjg@gmail.com "
+        type: String,    
         required: true,    
-        trim:true,     //use trim for space
+        trim:true,    
         unique: true,
         lowercase: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new Error('Email is invalid')
-            } 
-        },
-        match: [
-            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            //enter a valid email id must contain @^&*%12
-        ]
     },
     password: {
         type: String,
