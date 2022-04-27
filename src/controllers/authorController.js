@@ -1,30 +1,10 @@
-<<<<<<< HEAD
-
-const authormodel = require("../models/authorModel")
-
-
-
-
-
-
-
-let createAuthor = async (req, res) => {
+const authorModel =require("../models/authorModel")
          
-try {
-         data=req.body
-        let result= await authormodel.create(data)
-        res.status(200).send({Msg:data,result:true})
-       
-
-=======
-const authorModel = require("../models/authorModel")
-
 let createAuthor = async (req, res) => {
     try {
         data=req.body
         let result= await authorModel.create(data)
         res.status(201).send({Msg: result})
->>>>>>> d79b21940b7f1af59d46d0b477fb9e12ff83f631
     } catch (err) {
         res.status(500).send({ Error: err.message })
     }
