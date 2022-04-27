@@ -2,16 +2,6 @@ const authorModel = require("../models/authorModel");
 const { findById } = require("../models/blogModel");
 const blogModel = require("../models/blogModel")
 
-// // let createBlog = async (req, res) => {
-// //     try {
-// //         let data=req.body
-// //         let result= await blogModel.create(data)
-// //         res.status(201).send({Msg: result})
-// //     } catch (err) {
-// //         res.status(500).send({ Error: err.message })
-// //     }
-// // }
-
 
 let getblog = async (req, res) => {
     try {
@@ -47,20 +37,6 @@ const createBlog = async (req, res) => {
         res.status(500).send({ status: false, error: error.message })
     }
 }
-
-// // // const updateBlog= async (req,res)=>{
-// // //     try{
-
-// // //         const id =req.params.blogId
-// // //         const data =req.body
-// // //         const updated = await blogModel.findByIdAndUpdate(id ,  data , { new: true })
-// // //         res.send({msg:updated})
-// // //         console.log(updated)
-
-// // //     }
-// // //     catch (error) {
-// // //         res.status(500).send({ status: false, error: error.message })
-// // //     }
 
 
 // let updateBlog = async (req, res) => {
