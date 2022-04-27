@@ -1,25 +1,68 @@
+const authorModel = require("../models/authorModel");
+//const { findById } = require("../models/blogModel");
 const blogModel = require("../models/blogModel")
+
 
 let getblog = async (req, res) => {
     try {
-        let tittle = req.query.title;
-        let givencategory = req.query.category;
-        let giventags = req.query.tags;
-        let data = await blogSchema.find(({ deleted: "true", published: "true" }));
-        if (req.query) {
-            let resultdata = await blogModel.find({ $or: [{ title: tittle }, { category: givencategory }, { tags: giventags }] });
-            return res.status(200).send({ masg: resultdata })
+        let authorid = req.query.authorId;
+        let mycategory = req.query.category;
+       let mytags = req.query.tags;
+       let mysubcategory = req.query.subcategory;
+        if (authorid || mycategory || mytags||mysubcategory) {
+           
+            let data = await authorModel.find({ _id: authorid })
+         
+            if (data.length == 0) {
+                return res.status(400).send({ msg: "give valid authorid" })
+            }
+           
+            let result = await blogModel.find({$and:[{$or:[{ authorId: authorid},{category:mycategory},{tags:mytags},{subcategory:mysubcategory}]},{ isPublished: true,isDeleted: false }]})
+            return res.status(200).send({ msg: result })
+
         }
-        else {
-         let data = await blogModel.find(({ deleted: "true", published: "true" }));
-        let result = await blogModel.create(data)
-        res.status(201).send({ msg: result })
-    
+         let mainresult = await blogModel.find({ isPublished: true, isDeleted: false });
+        return res.status(200).send({ msg: mainresult })
 
     } catch (err) {
         res.status(500).send({ Error: err.message })
     }
-} 
+    // try {
+    //     let data = req.query;
+    //         let resultdata = await blogModel.find({$and:[{data},{isPublished:true,isDeleted:false}]});
+    //         return res.status(200).send({ masg: resultdata  })
+    //    }
+    //     catch (error) {
+    //         res.status(500).send({ status: false, error: error.message })
+    //     }
+    // }
+
+    // //         let data = req.body
+    // //         let result = await blogModel.create(data)
+    // //         res.status(201).send({ msg: result })
+    // //     } catch (err) {
+    // //         res.status(500).send({ Error: err.message })
+    // //     }
+    // //
+}
+
+const createBlog = async (req, res) => {
+    try {
+        const data = req.body
+        const isPublished = req.body.isPublished
+        const isDeleted = req.body.isDeleted
+        if (!data.title || !data.body || !data.category || !data.authorId) return res.status(400).send({ error: "title ,body ,category are mandantory" })
+        const result = await blogModel.create(data)
+        if (isPublished) result.publishedAt = Date()
+        if (isDeleted) result.deletedAt = Date()
+        result.save()
+        return res.status(201).send({ msg: result })
+    }
+    catch (error) {
+        res.status(500).send({ status: false, error: error.message })
+    }
+}
+
 
 // let updateBlog = async (req, res) => {
 //     try {
@@ -37,11 +80,7 @@ let getblog = async (req, res) => {
 //         res.status(500).send({ Error: err.message })
 //     }
 // }
-// let postblog = async (req, res) => {
-//     try {
-//         let data = req.body;
-//         let savedata = await blogSchema.create(data)
-//         res.status(200).send({ masg: savedata })
+
 
 // let deleteBlog = async (req, res) => {
 //     try {
@@ -59,5 +98,9 @@ let getblog = async (req, res) => {
 // }
 
 
+// // // module.exports.getblog = getblog;
+// // // module.exports.postblog = postblog;
+//module.exports = { createBlog ,getblog}// updateBlog, deleteBlog }
+module.exports.createBlog = createBlog;
 module.exports.getblog = getblog;
-//module.exports.postblog = postblog;
+
