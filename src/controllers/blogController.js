@@ -40,6 +40,18 @@ let getblog = async (req, res) => {
     }
 } 
 
+const createBlog = async (req, res) => {
+    try {
+        const data = req.body
+        if (!data.title||!data.body||!data.category)  return res.status(400).send({error:"title ,body ,category are mandantory"})
+            const result = await blogModel.create(data)
+            return res.status(201).send({ msg: result })
+    }
+    catch (error) {
+        res.status(500).send({ status: false, error: error.message })
+    }
+}
+
 let updateBlog = async (req, res) => {
     try {
         let bId = req.params.blogId
