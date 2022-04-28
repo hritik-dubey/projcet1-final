@@ -3,8 +3,6 @@ const blogModel = require("../models/blogModel")
 
 //###################################################################################################
 
-
-let getblog = async (req, res) => {
     try {
         let authorid = req.query.authorId;
         let mycategory = req.query.category;
