@@ -32,7 +32,7 @@ const createBlog = async (req, res) => {
         let data = req.body
         let isPublished = req.body.isPublished
         let isDeleted = req.body.isDeleted
-
+        
         const validId= await authorModel.findById({_id:data.authorId})
         if(!validId) return res.status(400).send({status:false,msg:"AuthorId is not valid"})
 

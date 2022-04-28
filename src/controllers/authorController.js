@@ -1,55 +1,34 @@
-const authorModel =require("../models/authorModel")
-         
+const authorModel = require("../models/authorModel")
+
 let createAuthor = async (req, res) => {
     try {
-        data=req.body
-        let result= await authorModel.create(data)
-        res.status(201).send({Msg: result})
-    } catch (err) {
+        data = req.body
+        const { fname, lname, title, email, password } = data
+
+        if (!keyValid(fname)) return res.status(400).send({ status: false, msg: "fnamme should be valid" })
+        if (!keyValid(lname)) return res.status(400).send({ status: false, msg: "lname should be valid" })
+        if (!keyValid(title)) return res.status(400).send({ status: false, msg: "title should be valid" })
+        if (!keyValid(email)) return res.status(400).send({ status: false, msg: "email should be valid" })
+        if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) return res.status(400).send({ status: false, msg: "Invalid email format" })
+        if (!keyValid(password)) return res.status(400).send({ status: false, msg: "password should be valid" })
+
+        let validEmail = await authorModel.findOne({ email: email }) 
+        console.log(validEmail)
+        if (validEmail) return res.status(400).send({ status: false, msg: "Email already exist" })
+
+        let createdAuthor = await authorModel.create(data)
+        return res.status(201).send({ status: true, msg: createdAuthor })
+
+    }
+    catch (err) {
         res.status(500).send({ Error: err.message })
     }
 }
-module.exports.createAuthor= createAuthor
 
+let keyValid = function (value) {
+    if (typeof (value) == "undefined" || value == null) return false
+    if (typeof (value) === "string" && value.trim().length == 0) return false    //  string 
+    return true
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // const newauther = new author({
-// //     firstName: req.body.fname,
-// //     lastName: req.body.lname,
-// //     email: req.body.Email,
-// //     password: req.body.password
-// // })
-
-// module.exports.createAuthor= createAuthor
-
-// let result = await axios(options);
-//         console.log(result)
-//         let data = result.data
-//         res.status(200).send({ msg: data, status: true })
-
-
-// router.post("/author", async (req, res) => {
-//     try {
-//       var newauthor = new author(req.body);
-//       await author.save();
-//       res.status(200).send(user);
-//     } catch (error) {
-//       res.status(500).send({Error:error.message});
-//     }
-//   });
-
-//   module.exports.createAuthor= createAuthor
-  
-//   module.exports = mongoose.model("author", createauthor);
+module.exports.createAuthor = createAuthor
