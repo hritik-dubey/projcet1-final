@@ -1,38 +1,32 @@
 const mongoose = require('mongoose');
-const validator= require("validator")
 
 const authormodel = new mongoose.Schema({
     fname: {
         type: String,
         required: true,
+        trim:true
     },
     lname: {
         type: String,
         required: true,
+        trim:true
     },
     title: {
         type: String,
-        required: true,                                          
-        enum: ["Mr", "Mrs", "Miss"],
+        required: true,
+        trim:true,
+        enum: ["Mr", "Mrs", "Miss"],    
     },
     email: {
-        type: String,    //"ghghjghjg@gmail.com "
-        required: true,    
-        trim:true,     //use trim for space
-        unique: true,
+        type: String,
+        trim: true,
         lowercase: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new Error('Email is invalid')
-            } 
-        },
-        match: [
-            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            //enter a valid email id must contain @^&*%12
-        ]
+        unique: true,
+        required: 'Email address is required',
     },
     password: {
         type: String,
+        trim:true,
         requird: true,
         minlength: 6,
         select: false,
