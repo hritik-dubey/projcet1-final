@@ -15,18 +15,18 @@ const createBlog = async (req, res) => {
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false.valueOf, msg: "Please provide something to create blog" })
 
         const { authorId, title, body, tags, category, subcategory, isPublished } = data
-        // console.log("===================");
-        // // const validId = await authorModel.findById(authorId)
-        // console.log("===================");
-        // console.log(validId)
-        // console.log("===================");
+
+        if (!authorId) return res.status(400).send({ msg: "authorId is required...!" });
         if (keyValid(authorId)) return res.status(400).send({ status: false, msg: "AuthorId should be valid" })
         const validId = await authorModel.findById(authorId)
         if (!validId) return res.status(400).send({ status: false, msg: "AuthorId is invalid" })
+        if (!title) return res.status(400).send({ msg: "Title is required...!" });
         if (keyValid(title)) return res.status(400).send({ status: false, msg: "title should be valid" })
+        if (!body) return res.status(400).send({ msg: "Body is required...!" });
         if (keyValid(body)) return res.status(400).send({ status: false, msg: "body should be valid" })
         if (tags != undefined)
             if (keyValid(tags)) return res.status(400).send({ status: false, msg: "tags should be valid" })
+        if (!category) return res.status(400).send({ msg: "Category is required...!" });
         if (keyValid(category)) return res.status(400).send({ status: false, msg: "category should be valid" })
         if (subcategory != undefined)
             if (keyValid(subcategory)) return res.status(400).send({ status: false, msg: "subcategory should be valid" })
@@ -34,7 +34,8 @@ const createBlog = async (req, res) => {
         let repeativeData = await blogModel.find({ body: body })
         console.log(repeativeData)
         if (!repeativeData.length == 0) return res.status(400).send({ status: false, msg: "you are creating repeative blog again with same body" })
-        let result = await blogModel.create(data)   //unique
+        
+        let result = await blogModel.create(data) 
         if (isPublished) { result.publishedAt = Date() }
         result.save()
         return res.status(201).send({ msg: result })
@@ -47,7 +48,7 @@ const createBlog = async (req, res) => {
 const getblog = async (req, res) => {
     try {
         const data = req.query
-        const blogs = {}   /// to be completed
+        const blogs = {}
         const { authorId, category, tags, subcategory } = data
 
         if (authorId != undefined) {
@@ -68,9 +69,9 @@ const getblog = async (req, res) => {
             if (keyValid(subcategory)) return res.status(400).send({ status: false, msg: "Subcategory is invalid" })
             blogs.subcategory = subcategory
         }
-         blogs.isDeleted=false
-         blogs.isPublished=true
-        let result = await blogModel.find(blogs)
+        blogs.isDeleted = false
+        blogs.isPublished = true
+        let result = await blogModel.find(blogs).count()
         console.log(blogs)
         if (result.length == 0) return res.status(404).send({ status: false, msg: "No blog found" })
         return res.status(200).send({ msg: result })
