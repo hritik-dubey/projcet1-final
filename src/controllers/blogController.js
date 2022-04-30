@@ -1,3 +1,4 @@
+const { findOne } = require("../models/authorModel");
 const authorModel = require("../models/authorModel");
 const blogModel = require("../models/blogModel")
 //######################################################################################################################
@@ -14,8 +15,11 @@ const createBlog = async (req, res) => {
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false.valueOf, msg: "Please provide something to create blog" })
 
         const { authorId, title, body, tags, category, subcategory, isPublished } = data
-        console.log(body)
-
+        // console.log("===================");
+        // // const validId = await authorModel.findById(authorId)
+        // console.log("===================");
+        // console.log(validId)
+        // console.log("===================");
         if (keyValid(authorId)) return res.status(400).send({ status: false, msg: "AuthorId should be valid" })
         const validId = await authorModel.findById(authorId)
         if (!validId) return res.status(400).send({ status: false, msg: "AuthorId is invalid" })
@@ -43,24 +47,34 @@ const createBlog = async (req, res) => {
 const getblog = async (req, res) => {
     try {
         const data = req.query
-        const blogs = {}
+        const blogs = {}   /// to be completed
         const { authorId, category, tags, subcategory } = data
-        if (authorId) {
+
+        if (authorId != undefined) {
             if (keyValid(authorId)) return res.status(400).send({ status: false, msg: "AuthorId is invalid" })
             const validId = await authorModel.findById(authorId)
             if (!validId) return res.status(400).send({ status: false, msg: "Not a valid AuthorId" })
+            blogs.authorId = authorId
         }
-        if (category)
+        if (category != undefined) {
             if (keyValid(category)) return res.status(400).send({ status: false, msg: "Category is invalid" })
-        if (tags != undefined)
-            return res.status(400).send({ status: false, msg: "Tags is invalid" })
-        if (subcategory)
-            if (keyValid(subcategory)) return res.status(400).send({ status: false, msg: "Subcategory is invalid" })
-        let result = await blogModel.find({ authorId: authorId })
-        if (result.length == 0) return res.status(404).send({ status: false, msg: "No blog found" })
-        else {
-            return res.status(200).send({ msg: result })
+            blogs.category = category
         }
+        if (tags != undefined) {
+            if (keyValid(tags)) return res.status(400).send({ status: false, msg: "tags is invalid" })
+            blogs.tags = tags
+        }
+        if (subcategory != undefined) {
+            if (keyValid(subcategory)) return res.status(400).send({ status: false, msg: "Subcategory is invalid" })
+            blogs.subcategory = subcategory
+        }
+         blogs.isDeleted=false
+         blogs.isPublished=true
+        let result = await blogModel.find(blogs)
+        console.log(blogs)
+        if (result.length == 0) return res.status(404).send({ status: false, msg: "No blog found" })
+        return res.status(200).send({ msg: result })
+
     }
     catch (err) {
         res.status(500).send({ Error: err.message })
@@ -70,10 +84,7 @@ const getblog = async (req, res) => {
 
 let updateBlog = async (req, res) => {
     try {
-        let blogId = req.params.blogId
-        let blog = await blogModel.findOne({ _id: blogId, isDeleted: false })
-        if (!blog)
-            return res.status(404).send({ status: false, msg: "No blog exits with this Id or the blog is deleted" })
+
         let data = req.body
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "Please provide something to update" })
         let { title, body, category, subcategory, tags } = data

@@ -1,4 +1,5 @@
 const authorModel = require("../models/authorModel")
+const jwt =require("jsonwebtoken")
 
 let keyValid = function (value) {
     if (typeof (value) == "undefined" || value == null) {return true}
@@ -29,5 +30,20 @@ let createAuthor = async (req, res) => {
     }
 }
 
+let loginAuthor = async (req, res) => {
+    let data=req.body
+    let {email,password}=data   
+    let validAuthor = await authorModel.findOne({email:email,password:password})
+    if(!validAuthor) return res.status(400).send({status:false,msg:"Wrong login details"})
+    let authorId=validAuthor._id
+    let token =await jwt.sign({authorId:authorId},"functionUp project1Blog")
+    res.setHeader("X-api-token",token)
+    res.status(201).send({status:true,msg:token})
+}
 
 module.exports.createAuthor = createAuthor
+module.exports.loginAuthor=loginAuthor
+
+
+// let decode = await jwt.verify(token,"functionUp project1Blog")
+// console.log(decode)
