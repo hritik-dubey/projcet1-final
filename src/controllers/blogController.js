@@ -68,13 +68,8 @@ let updateBlog = async (req, res) => {
         let blog = await blogModel.findOne({ _id: blogId }, { isDeleted: false })
         if (!blog)
             return res.status(404).send({ status: false, msg: "No blog exits with this Id or the blog is deleted" })
-      //  let data = req.body
-        // const { title, body, category, subcategory, tags } = data
-        let title = req.body.title
-        let body = req.body.body
-        let category = req.body.category
-        let subcategory = req.body.subcategory
-        let tags = req.body.tags
+       let data = req.body
+         const { title, body, category, subcategory, tags } = data
         if (title.length>=0)
             if (!keyValid(title)) return res.status(400).send({ status: false, msg: "title should be valid" })
         if (body.length>=0)
@@ -86,7 +81,7 @@ let updateBlog = async (req, res) => {
         if (subcategory.length>=0)
             if (!keyValid(subcategory)) return res.status(400).send({ status: false, msg: "subcategory should be valid" })
 
-        let updatedBlog = await blogModel.findByIdAndUpdate({ _id: blogId }, { $set: { title: title.trim(), body: body.trim(), category: category.trim() }, $addToSet: { subcategory: subcategory, tags: tags } }, { new: true })
+        let updatedBlog = await blogModel.findByIdAndUpdate({ _id: blogId }, { $set: { title: title.trim(), body: body.trim(), category: category.trim() }, $addToSet: { subcategory: subcategory, tags: tags } }, { new: true })// welcome
 
         updatedBlog.isPublished = true
         updatedBlog.publishedAt = Date()
