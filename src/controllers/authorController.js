@@ -6,19 +6,24 @@ let keyValid = function (value) {
     if (typeof (value) === "string" && value.trim().length == 0) { return true }
     return false
 }
+//phase1
 let createAuthor = async (req, res) => {
     try {
         data = req.body
         const { fname, lname, title, email, password } = data
         if (!fname) return res.status(400).send({ status: false, msg: "fname is required...." });
-        if (keyValid(fname)) return res.status(400).send({ status: false, msg: "fnamme should be valid" })
+        if (keyValid(fname)) return res.status(400).send({ status: false, msg: "fname should be valid" })
+
         if (!lname) return res.status(400).send({ status: false, msg: "lname is required...." });
         if (keyValid(lname)) return res.status(400).send({ status: false, msg: "lname should be valid" })
+
         if (!title) return res.status(400).send({ status: false, msg: "title is required...." });
         if (keyValid(title)) return res.status(400).send({ status: false, msg: "title should be valid" })
+
         if (!email) return res.status(400).send({ status: false, msg: "email is required...." });
         if (keyValid(email)) return res.status(400).send({ status: false, msg: "email should be valid" })
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) return res.status(400).send({ status: false, msg: "Invalid email format" })
+
         if (!password) return res.status(400).send({ status: false, msg: "password is required....." });
         if (keyValid(password)) return res.status(400).send({ status: false, msg: "password should be valid" })
 
@@ -32,7 +37,7 @@ let createAuthor = async (req, res) => {
         res.status(500).send({ Error: err.message })
     }
 }
-
+//phase2
 let loginAuthor = async (req, res) => {
     let data = req.body
     let { email, password } = data

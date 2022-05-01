@@ -1,4 +1,4 @@
-const { findOne } = require("../models/authorModel");
+
 const authorModel = require("../models/authorModel");
 const blogModel = require("../models/blogModel")
 //######################################################################################################################
@@ -34,8 +34,8 @@ const createBlog = async (req, res) => {
         let repeativeData = await blogModel.find({ body: body })
         console.log(repeativeData)
         if (!repeativeData.length == 0) return res.status(400).send({ status: false, msg: "you are creating repeative blog again with same body" })
-        
-        let result = await blogModel.create(data) 
+
+        let result = await blogModel.create(data)
         if (isPublished) { result.publishedAt = Date() }
         result.save()
         return res.status(201).send({ msg: result })
@@ -138,14 +138,12 @@ let deleteBlog = async (req, res) => {
 const deleteBlogs = async (req, res) => {
     try {
         let data = req.query;
-        if (data.isPublished == undefined) return res.send({ status: false, msg: "Please Provide ispublised field" })
-        console.log(data.isPublished)
-        if (data.isPublished == "true") return res.status(403).send({ status: false, msg: "You Cant Delete Published blogs" })
-        let Blog = await blogModel.find(data)
-        if (Blog.length == 0) return res.status(404).send({ status: false, msg: "No Blog found with Given Details" })
-        Blog[0].isDeleted = true
-        Blog[0].save()
-        res.status(200).send({ status: true, msg: Blog })
+        let blog = await blogModel.find(data)
+        if (blog.length == 0) {
+            return res.status(404).send({ status: false, msg: "No Blog found with Given Details" })
+        }
+        let deletedtedUser = await blogModel.updateMany(data, { $set: { isDeleted: false, deletedAt: Date.now() } }, { new: true });
+        return res.status(200).send({ status: true, msg: deletedtedUser });
     }
     catch (error) {
         res.status(500).send({ status: false, error: error.message })

@@ -27,6 +27,7 @@ let authorize =async function(req,res,next){
         let authorId = blog.authorId
         console.log(authorId)
         if (decodedAuthorId != authorId) return res.status(403).send({ status: false, msg: "You are not Authorized" })
+        next()
     }
     catch(error)
     {
