@@ -8,7 +8,7 @@ let authenticate= async function (req,res,next){
          if(!token)  return res.status(403).send({status:false,msg:"Authentication failed"})
         let decodedToken = await jwt.verify(token,"functionUp project1Blog") 
         req["decodedAuthorId"]=decodedToken.authorId
-        console.log("hello")
+        console.log("Inside Middleware")
         next()
     }
     catch(error)

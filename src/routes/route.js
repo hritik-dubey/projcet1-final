@@ -11,11 +11,11 @@ router.post("/createBlog" ,middleWare.authenticate,blogController.createBlog)
 
 router.get("/getBlog",middleWare.authenticate,blogController.getblog)
 
-router.put('/blogs/:blogId',middleWare.authenticate, middleWare.authorize ,blogController.updateBlog)
+router.put('/blogs/:blogId' ,blogController.updateBlog)
 
 router.delete('/blogs/:blogId',middleWare.authenticate, middleWare.authorize,blogController.deleteBlog)   // path params
 
-router.delete("/deleteBlogs",middleWare.authenticate,middleWare.authorize,blogController.deleteBlogs)    //query params
+router.delete("/deleteBlogs",blogController.deleteBlogs)    //query params ,middleWare.authenticate,middleWare.authorize
 
 router.post("/loginAuthor",authorController.loginAuthor)
 
