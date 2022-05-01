@@ -3,7 +3,7 @@ const authorModel = require("../models/authorModel");
 const blogModel = require("../models/blogModel")
 //######################################################################################################################
 let keyValid = function (value) {
-    if (typeof (value) == "undefined" || value == null) return true
+    if (typeof (value) == "undefined") return true
     if (typeof (value) === "string" && value.trim().length == 0) return true
     return false
 }
@@ -76,7 +76,7 @@ const getblog = async (req, res) => {
         }
         blogs.isDeleted = false
         blogs.isPublished = true
-        let result = await blogModel.find(blogs).count()
+        let result = await blogModel.find(blogs)
         if (result.length == 0) return res.status(400).send({ status: false, msg: "No blog found" })
         return res.status(200).send({ status: true, msg: result })
 
@@ -96,7 +96,7 @@ let updateBlog = async (req, res) => {
 
         if (typeof tags === "string") tags = tags.split()
         if (typeof subcategory === "string") subcategory = subcategory.split()
-        tags = tags.map(el => el.trim())
+        tags = tags.filter(el => el.trim()).map(el => el.trim())
         subcategory = subcategory.filter(el => el.trim()).map(el => el.trim())
         data.tags = tags
         data.subcategory = subcategory
@@ -144,6 +144,12 @@ const deleteBlogs = async (req, res) => {
         let data = req.query;
         let {category,authorId,tags,subcategory}=data
 
+        if (authorId != undefined) {
+            if (keyValid(authorId)) return res.status(400).send({ status: false, msg: "AuthorId is invalid" })
+            const validId = await authorModel.findById(authorId)
+            if (!validId) return res.status(400).send({ status: false, msg: "Not a valid AuthorId" })
+        }
+
         if (category != undefined) {
             category = category.trim()
             if (keyValid(category)) return res.status(400).send({ status: false, msg: "category should be valid" })
@@ -156,7 +162,7 @@ const deleteBlogs = async (req, res) => {
             subcategory = subcategory.trim()
             if (keyValid(subcategory)) return res.status(400).send({ status: false, msg: "subcategory should be valid" })
         }
-        // console.log(data)
+
         let blog = await blogModel.find(data, { isPublished: false })
         if (blog.length == 0) {
             return res.status(404).send({ status: false, msg: "No Blog found with Given Details" })

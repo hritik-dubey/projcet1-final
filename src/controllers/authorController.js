@@ -2,11 +2,11 @@ const authorModel = require("../models/authorModel")
 const jwt = require("jsonwebtoken")
 
 let keyValid = function (value) {
-    if (typeof (value) == "undefined" || value == null) { return true }
+    if (typeof (value) == "undefined") { return true }
     if (typeof (value) === "string" && value.trim().length == 0) { return true }
     return false
 }
-//phase1
+
 let createAuthor = async (req, res) => {
     try {
         data = req.body
@@ -37,7 +37,7 @@ let createAuthor = async (req, res) => {
         res.status(500).send({ Error: err.message })
     }
 }
-//phase2
+
 let loginAuthor = async (req, res) => {
     let data = req.body
     let { email, password } = data
@@ -51,7 +51,3 @@ let loginAuthor = async (req, res) => {
 
 module.exports.createAuthor = createAuthor
 module.exports.loginAuthor = loginAuthor
-
-
-// let decode = await jwt.verify(token,"functionUp project1Blog")
-// console.log(decode)
