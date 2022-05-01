@@ -7,17 +7,18 @@ const middleWare =require("../middleWare/middleWare")
 
 router.post('/createAuthor',authorController.createAuthor) 
 
-router.post("/createBlog" ,middleWare.authenticate,blogController.createBlog)      
+router.post("/createBlog" ,middleWare.authenticate,blogController.createBlog)    //done     
 
-router.get("/getBlog",middleWare.authenticate,blogController.getblog)
+router.get("/getBlog",middleWare.authenticate,middleWare.authorizeGet,blogController.getblog)   //done 
 
-router.put('/blogs/:blogId' ,blogController.updateBlog)
+router.put('/blogs/:blogId',middleWare.authenticate ,blogController.updateBlog)   //done
 
-router.delete('/blogs/:blogId',middleWare.authenticate, middleWare.authorize,blogController.deleteBlog)   // path params
+router.delete('/blogs/:blogId',middleWare.authenticate, middleWare.authorize,blogController.deleteBlog)   //done
 
-router.delete("/deleteBlogs",blogController.deleteBlogs)    //query params ,middleWare.authenticate,middleWare.authorize
+router.delete("/deleteBlogs",middleWare.authenticate, middleWare.authorizeGet,blogController.deleteBlogs)   //done
 
-router.post("/loginAuthor",authorController.loginAuthor)
+router.post("/loginAuthor",authorController.loginAuthor)   //done
 
 
 module.exports = router; 
+//middleWare.authenticate, middleWare.authorize
