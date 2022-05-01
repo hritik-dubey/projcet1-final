@@ -1,4 +1,3 @@
-
 const authorModel = require("../models/authorModel");
 const blogModel = require("../models/blogModel")
 //######################################################################################################################
@@ -7,7 +6,6 @@ let keyValid = function (value) {
     if (typeof (value) === "string" && value.trim().length == 0) return true
     return false
 }
-
 //######################################################################################################################
 const createBlog = async (req, res) => {
     try {
@@ -16,23 +14,24 @@ const createBlog = async (req, res) => {
 
         let { authorId, title, body, tags, category, subcategory, isPublished } = data
 
+        
+        if (!authorId) return res.status(400).send({ msg: "authorId is required...!" });
+        if (keyValid(authorId)) return res.status(400).send({ status: false, msg: "AuthorId should be valid" })
+        const validId = await authorModel.findById(authorId)
+        if (!validId) return res.status(400).send({ status: false, msg: "AuthorId is invalid" })
+        
+        if (!title) return res.status(400).send({ msg: "Title is required...!" });
+        if (keyValid(title)) return res.status(400).send({ status: false, msg: "title should be valid" })
+        
+        if (!body) return res.status(400).send({ msg: "Body is required...!" });
+        if (keyValid(body)) return res.status(400).send({ status: false, msg: "body should be valid" })
+        
         if (typeof tags === "string") tags = tags.split()
         if (typeof subcategory === "string") subcategory = subcategory.split()
         tags = tags.filter(el => el.trim()).map(el => el.trim())
         subcategory = subcategory.filter(el => el.trim()).map(el => el.trim())
         data.tags = tags
         data.subcategory = subcategory
-
-        if (!authorId) return res.status(400).send({ msg: "authorId is required...!" });
-        if (keyValid(authorId)) return res.status(400).send({ status: false, msg: "AuthorId should be valid" })
-        const validId = await authorModel.findById(authorId)
-        if (!validId) return res.status(400).send({ status: false, msg: "AuthorId is invalid" })
-
-        if (!title) return res.status(400).send({ msg: "Title is required...!" });
-        if (keyValid(title)) return res.status(400).send({ status: false, msg: "title should be valid" })
-
-        if (!body) return res.status(400).send({ msg: "Body is required...!" });
-        if (keyValid(body)) return res.status(400).send({ status: false, msg: "body should be valid" })
 
         if (!category) return res.status(400).send({ msg: "Category is required...!" });
         if (keyValid(category)) return res.status(400).send({ status: false, msg: "category should be valid" })
@@ -76,7 +75,7 @@ const getblog = async (req, res) => {
         }
         blogs.isDeleted = false
         blogs.isPublished = true
-        let result = await blogModel.find(blogs).count()
+        let result = await blogModel.find(blogs)//.count()
         if (result.length == 0) return res.status(400).send({ status: false, msg: "No blog found" })
         return res.status(200).send({ status: true, msg: result })
 
@@ -94,13 +93,7 @@ let updateBlog = async (req, res) => {
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "Please provide something to update" })
         let { title, body, category, subcategory, tags } = data
 
-        if (typeof tags === "string") tags = tags.split()
-        if (typeof subcategory === "string") subcategory = subcategory.split()
-        tags = tags.map(el => el.trim())
-        subcategory = subcategory.filter(el => el.trim()).map(el => el.trim())
-        data.tags = tags
-        data.subcategory = subcategory
-
+        
         if (title != undefined) {
             title = title.trim()
             if (keyValid(title)) return res.status(400).send({ status: false, msg: "title should be valid" })
@@ -109,6 +102,13 @@ let updateBlog = async (req, res) => {
             body = body.trim()
             if (keyValid(body)) return res.status(400).send({ status: false, msg: "body should be valid" })
         }
+        
+        if (typeof tags === "string") tags = tags.split()
+        if (typeof subcategory === "string") subcategory = subcategory.split()
+        tags = tags.filter(el => el.trim()).map(el => el.trim())
+        subcategory = subcategory.filter(el => el.trim()).map(el => el.trim())
+        data.tags = tags
+        data.subcategory = subcategory
 
         if (category != undefined) {
             category = category.trim()
@@ -142,7 +142,14 @@ let deleteBlog = async (req, res) => {
 const deleteBlogs = async (req, res) => {
     try {
         let data = req.query;
-        let {category,authorId,tags,subcategory}=data
+        let { category, authorId, tags, subcategory } = data
+
+        if (authorId != undefined) {
+            if (keyValid(authorId)) return res.status(400).send({ status: false, msg: "AuthorId is invalid" })
+            const validId = await authorModel.findById(authorId)
+            if (!validId) return res.status(400).send({ status: false, msg: "AuthorId not found" })
+           
+        }
 
         if (category != undefined) {
             category = category.trim()

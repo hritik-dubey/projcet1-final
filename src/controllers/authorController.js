@@ -37,17 +37,6 @@ let createAuthor = async (req, res) => {
         res.status(500).send({ Error: err.message })
     }
 }
-<<<<<<< HEAD
-
-let loginAuthor = async (res,req) =>{
-    try{
-        let data = req.body;
-        let {email,password}=data ;
-        let validEmail = await authorModel.findOne(data)
-    if(!validEmail) return  res.status(200).send({msg:"not fin the data"})
-}
-
-=======
 //phase2
 let loginAuthor = async (req, res) => {
     let data = req.body
@@ -59,11 +48,6 @@ let loginAuthor = async (req, res) => {
     res.setHeader("X-api-token", token)
     res.status(201).send({ status: true, msg: token })
 }
->>>>>>> 4a8841d9bec63e4de35c12ead7653e73cbc3ff0e
 
 module.exports.createAuthor = createAuthor
 module.exports.loginAuthor = loginAuthor
-
-
-// let decode = await jwt.verify(token,"functionUp project1Blog")
-// console.log(decode)

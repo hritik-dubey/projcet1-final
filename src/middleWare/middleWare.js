@@ -1,24 +1,22 @@
-let jwt =require("jsonwebtoken")
+let jwt = require("jsonwebtoken")
 const blogModel = require("../models/blogModel")
 
 
-let authenticate= async function (req,res,next){
-    try{
-        let token = req.headers["x-api-key"] 
-         if(!token)  return res.status(403).send({status:false,msg:"Authentication failed"})
-        let decodedToken = await jwt.verify(token,"functionUp project1Blog") 
-        req["decodedAuthorId"]=decodedToken.authorId
-        console.log("Inside Middleware")
+let authenticate = async function (req, res, next) {
+    try {
+        let token = req.headers["x-api-key"]
+        if (!token) return res.status(403).send({ status: false, msg: "Authentication failed" })
+        let decodedToken = await jwt.verify(token, "functionUp project1Blog")
+        req["decodedAuthorId"] = decodedToken.authorId;
         next()
     }
-    catch(error)
-    {
-        return res.status(500).send({status:false,error:error.message})
-    } 
+    catch (error) {
+        return res.status(500).send({ status: false, error: error.message })
+    }
 }
 
-let authorize =async function(req,res,next){
-    try{
+let authorize = async function (req, res, next) {
+    try {
         let decodedAuthorId = req.decodedAuthorId
         let blogId = req.params.blogId
         let blog = await blogModel.findOne({ _id: blogId, isDeleted: false })
@@ -29,9 +27,8 @@ let authorize =async function(req,res,next){
         if (decodedAuthorId != authorId) return res.status(403).send({ status: false, msg: "You are not Authorized" })
         next()
     }
-    catch(error)
-    {
-        return res.status(500).send({status:false,error:error.message})
-    } 
+    catch (error) {
+        return res.status(500).send({ status: false, error: error.message })
+    }
 }
-module.exports={authenticate, authorize}
+module.exports = { authenticate, authorize }
