@@ -4,23 +4,28 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const blogSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
     body: {
         type: String,
-        required: true
+        required: true,
+        unique:true,
+        trim:true
+        
     },
     authorId: {
         type: ObjectId,
         required: true,
-        ref: "author"
+        ref: "author",
     },
     tags: {
-        type: [String]
+        type: [String],
     },
     category: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
     subcategory: {
         type: [String]
